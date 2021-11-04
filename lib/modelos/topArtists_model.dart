@@ -18,7 +18,7 @@ class TopArtistsModel {
     return TopArtistsModel(
       name: map['name'],
       mbid: map['mbid'],
-      url: map['ursl']
+      url: map['url']
     );
   }
 
