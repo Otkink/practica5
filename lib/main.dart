@@ -43,3 +43,5 @@ late var listaAlbums;
 late var albumCoverImages; //arreglo que almacena [nombreArtista, nombreAlbum]
 var albumes = Map<String, String>();
 late var topAlbumInfo; //almacena los detalles del album seleccionado 
+late var trackInfo; //almacena los detalles de la cancion seleccionada
+late var paletteGenerator;

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:palette_generator/palette_generator.dart';
 import 'package:practica5/main.dart';
 import 'package:practica5/network/api_consuming.dart';
 
@@ -24,7 +25,9 @@ class _AlbumsScreenState extends State<AlbumsScreen> {
           onTap: () async {
             print('esperando...');
             await _getAlbumInfo('${albumes['$i artista']}', '${albumes['$i album']}');
-            //Navigator.pushNamed(context, '/detalles');
+            paletteGenerator = await getImagePalette(NetworkImage('${albumes['$i albumCover']}'));
+            print('HOLA $paletteGenerator');
+            Navigator.pushNamed(context, '/songs', arguments: {'albumCover':albumes['$i albumCover']});
           },
           child: Container(
             margin: EdgeInsets.only(right: 30, top: 10),
@@ -58,7 +61,9 @@ class _AlbumsScreenState extends State<AlbumsScreen> {
           onTap: () async {
             print('esperando...');
             await _getAlbumInfo('${albumes['$i artista']}', '${albumes['$i album']}');
-            //Navigator.pushNamed(context, '/detalles');
+            paletteGenerator = await getImagePalette(NetworkImage('${albumes['$i albumCover']}'));
+            print('HOLA $paletteGenerator');
+            Navigator.pushNamed(context, '/songs', arguments: {'albumCover':albumes['$i albumCover'], 'nombreAlbum':albumes['$i album']});
           },
           child: Container(
             margin: EdgeInsets.only(left: 30),
@@ -164,5 +169,12 @@ class _AlbumsScreenState extends State<AlbumsScreen> {
   _getAlbumInfo(String artista, String album) async {
     ApiConsuming? apiCon = ApiConsuming();
     await apiCon.getAlbumInfo(artista, album);
+  }
+
+  // Calculate dominant color from ImageProvider
+  Future<Color> getImagePalette (ImageProvider imageProvider) async {
+    final PaletteGenerator paletteGenerator = await PaletteGenerator
+        .fromImageProvider(imageProvider);
+    return paletteGenerator.dominantColor!.color;
   }
 }

@@ -37,6 +37,7 @@ dependencies:
   http: ^0.13.3
   elastic_drawer: ^2.0.1
   drawer_swipe: ^0.0.4
+  palette_generator: ^0.3.2
 
 dev_dependencies:
   flutter_test:
