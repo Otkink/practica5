@@ -18,6 +18,7 @@ class _AlbumsScreenState extends State<AlbumsScreen> {
   Widget build(BuildContext context) {
     
     var _listaAlbums = <Widget>[];
+    _listaAlbums.add(SizedBox(height: 20));
     for (int i = 0; i < 49; i++) { // i < 
      if(flag){
         _listaAlbums.add(
@@ -97,7 +98,8 @@ class _AlbumsScreenState extends State<AlbumsScreen> {
 
 
     return Scaffold(
-      //extendBodyBehindAppBar: true,
+      extendBodyBehindAppBar: true,
+      backgroundColor: Colors.white,
       appBar: PreferredSize(
             child: Container(
               padding: EdgeInsets.only(
@@ -109,7 +111,7 @@ class _AlbumsScreenState extends State<AlbumsScreen> {
                   IconButton(
                     padding: EdgeInsets.all(18.0),
                     onPressed: (){Navigator.pop(context);}, 
-                    icon: Icon(Icons.arrow_back_ios_rounded, color: Colors.black,),
+                    icon: Icon(Icons.arrow_back_ios_rounded, color: Colors.white,),
                     
                   ),
                   Container(
@@ -146,11 +148,30 @@ class _AlbumsScreenState extends State<AlbumsScreen> {
                     child: IconButton( 
                       padding: EdgeInsets.all(18.0),
                       onPressed: (){}, 
-                      icon: Icon(Icons.music_note_outlined, color: Colors.black,),
+                      icon: Icon(Icons.music_note_outlined, color: Colors.white,),
                       
                     ),
                   ),
                 ],
+              ),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.only(
+                          bottomLeft: Radius.circular(20),
+                          bottomRight: Radius.circular(20),
+                          ),
+                gradient: LinearGradient(
+                  colors: [
+                    Color(0xFF18252F),
+                    Color(0xFF213340)
+                  ]
+                ),
+                /*boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey,
+                    blurRadius: 20.0,
+                    spreadRadius: 1.0
+                  )
+                ]*/
               ),
             ),
             preferredSize: Size(

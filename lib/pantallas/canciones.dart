@@ -16,11 +16,13 @@ class _SongsScreenState extends State<SongsScreen> {
 
     final detalle = ModalRoute.of(context)!.settings.arguments as Map<String,dynamic>; //cone sta instruccion es posible recuperar los parametros enviados en el Navigator.pushNamed(..., arguments:"...")
     var _listaSongs = <Widget>[];
+    _listaSongs.add(SizedBox(height: 20));
     for(int i = 0; i < topAlbumInfo['tracks']['track'].length; i++){ //RESOLVER NULLIDAD DE QUE NO HAYA CANCIONES EN UN ALBUM
       _listaSongs.add(
         GestureDetector(
           onTap: () async {
             await _getTrackInfo(topAlbumInfo['artist'], topAlbumInfo['tracks']['track'][i]['name']);
+            Navigator.pushNamed(context, '/detalles', arguments: {'track':topAlbumInfo['tracks']['track'][i]['name'], 'duration' : formatDuration(topAlbumInfo['tracks']['track'][i]['duration'])});
           },
           child: Container(
             margin: EdgeInsets.symmetric(horizontal: 50),
@@ -29,11 +31,11 @@ class _SongsScreenState extends State<SongsScreen> {
               children: [
                 Row(
                   children: [
-                    Text("${i+1}. ", style: TextStyle(color: Colors.black54)),
-                    Container(width: 200, child: Text(topAlbumInfo['tracks']['track'][i]['name'], overflow: TextOverflow.ellipsis, style: TextStyle(color: Colors.black54))), //Evito que desborde y recorto el tecto al ancho del contenedor resultando en: lorem ipsum...
+                    Container(width: 50, child: Text("${i+1}. ", style: TextStyle(color: Colors.black54, fontWeight: FontWeight.bold))),
+                    Container(width: 200, child: topAlbumInfo['tracks']['track'][i] != null ? Text(topAlbumInfo['tracks']['track'][i]['name'], overflow: TextOverflow.fade, style: TextStyle(color: Colors.black54)) : Text("")), //Evito que desborde y recorto el tecto al ancho del contenedor resultando en: lorem ipsum...
                   ],
                 ),
-                Text('${formatDuration(topAlbumInfo['tracks']['track'][i]['duration'])}', style: TextStyle(color: Colors.black54))
+                topAlbumInfo['tracks']['track'][i] != null ? Text('${formatDuration(topAlbumInfo['tracks']['track'][i]['duration'])}', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)) : Text("")
               ],
             ),
           ),
@@ -48,9 +50,12 @@ class _SongsScreenState extends State<SongsScreen> {
     String valueString = colorString.split('(0x')[1].split(')')[0];
     int value = int.parse(valueString, radix: 16);
     Color imageShadow = new Color(value); //BoxShadowでColorとして使う
-
+    
+    var mediaQuery = MediaQuery.of(context);
+    
     return Scaffold(
       extendBodyBehindAppBar: true,
+      backgroundColor: Colors.white,
       appBar: PreferredSize(
         child: Container(
           padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
@@ -64,7 +69,7 @@ class _SongsScreenState extends State<SongsScreen> {
                 },
                 icon: Icon(
                   Icons.arrow_back_ios_rounded,
-                  color: Colors.black,
+                  color: Colors.white,
                 ),
               ),
               SizedBox(),
@@ -75,7 +80,7 @@ class _SongsScreenState extends State<SongsScreen> {
                   onPressed: () {},
                   icon: Icon(
                     Icons.music_note_outlined,
-                    color: Colors.black,
+                    color: Colors.white,
                   ),
                 ),
               ),
@@ -84,30 +89,33 @@ class _SongsScreenState extends State<SongsScreen> {
         ),
         preferredSize: Size(MediaQuery.of(context).size.width, 150.0),
       ),
-      body: Column(
+      body: Column(//NetworkImage('${detalle['albumCover']}')
         children: [
-          SizedBox(height: 50),
-          Center(
-              child: Container(
-                decoration: BoxDecoration(
-                //color: Colors.white,
-                shape: BoxShape.circle,
-                boxShadow: [BoxShadow(blurRadius: 10, color: imageShadow, spreadRadius: 5)],
+          //SizedBox(height: 50),
+          Container(
+            width: double.infinity,
+            height: mediaQuery.size.height / 1.9,
+            decoration: BoxDecoration(
+              shape: BoxShape.rectangle,
+              borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(48.0),
               ),
-                child: CircleAvatar(
-                    radius: 160,
-                    backgroundImage: NetworkImage('${detalle['albumCover']}'),
+              image: DecorationImage(
+                image:
+                    NetworkImage('${detalle['albumCover']}'),
+                fit: BoxFit.cover,
+              ),
+            ),
           ),
-              )),
-          SizedBox(height: 30),
+          SizedBox(height: 20),
           Container(
             margin: EdgeInsets.symmetric(horizontal: 20),//lo encierro en un container para evitar que desborde y el texto se acomode automaticamente
-            child: Text("${topAlbumInfo['name']}", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20 )),
+            child: Text("${topAlbumInfo['name']}", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: Color(0xFF18252F) )),
           ),
           SizedBox(height: 15),
           Container(
             margin: EdgeInsets.symmetric(horizontal: 20),//lo encierro en un container para evitar que desborde y el texto se acomode automaticamente
-            child: Text("${topAlbumInfo['artist']}", style: TextStyle(fontSize: 15))
+            child: Text("${topAlbumInfo['artist']}", style: TextStyle(fontSize: 15, color: Color(0xFF18252F)))
           ),
           SizedBox(height: 30),
           Expanded(//リストウィジェットのため必要
@@ -132,7 +140,7 @@ class _SongsScreenState extends State<SongsScreen> {
     return '$minutesString:$secondsString';// m:ss
   }
 
-  _getTrackInfo(String artista, String track) async {
+  Future<void>_getTrackInfo(String artista, String track) async {
     ApiConsuming? apiCon = ApiConsuming();
     await apiCon.getTrackInfo(artista, track);
   }

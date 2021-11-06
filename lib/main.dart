@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData( //Cambia el texto del status bar para todas las vistas
         appBarTheme: AppBarTheme(
           backwardsCompatibility: false, // 1
-          systemOverlayStyle: SystemUiOverlayStyle.dark, // 2
+          systemOverlayStyle: SystemUiOverlayStyle.light, // 2
         ),
       ),
       routes: {

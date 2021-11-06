@@ -45,7 +45,8 @@ class ApiConsuming {
   dynamic getTrackInfo(String artista, String track) async{ //recupera la infor de la cancion seleccionada
     final response = await http.get(Uri.parse('https://ws.audioscrobbler.com/2.0/?method=track.getInfo&api_key=b888f73daa74adb1a269ee720271d7db&artist=$artista&track=$track&format=json'));
     if(response.statusCode == 200){
-      var top = jsonDecode(response.body)['track'];
+      String source = Utf8Decoder().convert(response.bodyBytes); //necesario para mostrar los caracteres especiales
+      var top = jsonDecode(source)['track'];
       trackInfo = top;
       print(trackInfo);
       return top;
