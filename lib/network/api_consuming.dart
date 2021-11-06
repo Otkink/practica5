@@ -9,7 +9,8 @@ class ApiConsuming {
   dynamic getTopArtists() async{ //recupera los artistas mas populares del momento
     final response = await http.get(Uri.parse('https://ws.audioscrobbler.com/2.0/?method=chart.gettopartists&api_key=b888f73daa74adb1a269ee720271d7db&format=json'));
     if(response.statusCode == 200){
-      var top = jsonDecode(response.body)['artists']['artist'];
+      String source = Utf8Decoder().convert(response.bodyBytes); //necesario para mostrar los caracteres especiales
+      var top = jsonDecode(source)['artists']['artist'];
       topArtistsList = top;
       print(topArtistsList);
       return top;
@@ -21,7 +22,8 @@ class ApiConsuming {
   dynamic getTopAlbums(String name) async{ //recupera los albums mas populares del artista al que le corresponda tal mbid
     final response = await http.get(Uri.parse('https://ws.audioscrobbler.com/2.0/?method=artist.gettopalbums&artist=$name&api_key=b888f73daa74adb1a269ee720271d7db&format=json'));
     if(response.statusCode == 200){
-      var top = jsonDecode(response.body)['topalbums']['album'];
+      String source = Utf8Decoder().convert(response.bodyBytes); //necesario para mostrar los caracteres especiales
+      var top = jsonDecode(source)['topalbums']['album'];
       topAlbumsList = top;
       //print(topAlbumsList);
       return top;
@@ -33,7 +35,8 @@ class ApiConsuming {
   dynamic getAlbumInfo(String artista, String album) async{ //recupera los albums mas populares del artista al que le corresponda tal mbid
     final response = await http.get(Uri.parse('https://ws.audioscrobbler.com/2.0/?method=album.getinfo&api_key=b888f73daa74adb1a269ee720271d7db&artist=$artista&album=$album&format=json'));
     if(response.statusCode == 200){
-      var top = jsonDecode(response.body)['album'];
+      String source = Utf8Decoder().convert(response.bodyBytes); //necesario para mostrar los caracteres especiales
+      var top = jsonDecode(source)['album'];
       topAlbumInfo = top;
       print(topAlbumInfo);
       return top;
@@ -61,7 +64,7 @@ class ApiConsuming {
       //String source = Utf8Decoder().convert(response.bodyBytes); //necesario para mostrar los caracteres especiales
       var search = jsonDecode(response.body)['message']; //if(trackSearch['body']['track_list'].toString() != '[]'){ /* codigo.... */ }
       trackSearch = search;
-      if(trackSearch['body']['track_list'].toString() != '[]'){ has_lyrics = true; }
+      if(trackSearch['body']['track_list'].toString() != '[]'){ has_lyrics = true; }//else{ has_lyrics == false; } //evito que que aquel que no tenga lyrics entre al if(has_lyrics) de detalles.dart //PORQUE NO ME DA ERROR????
       print(topAlbumInfo);
       return search;
     }else{

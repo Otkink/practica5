@@ -17,6 +17,7 @@ class _SongsScreenState extends State<SongsScreen> {
     final detalle = ModalRoute.of(context)!.settings.arguments as Map<String,dynamic>; //cone sta instruccion es posible recuperar los parametros enviados en el Navigator.pushNamed(..., arguments:"...")
     var _listaSongs = <Widget>[];
     _listaSongs.add(SizedBox(height: 20));
+    if(topAlbumInfo['tracks'] != null){//el album puede no contener el parametro 'tracks'
     for(int i = 0; i < topAlbumInfo['tracks']['track'].length; i++){ //RESOLVER NULLIDAD DE QUE NO HAYA CANCIONES EN UN ALBUM
       _listaSongs.add(
         GestureDetector(
@@ -46,6 +47,18 @@ class _SongsScreenState extends State<SongsScreen> {
       _listaSongs.add(SizedBox(height: 20));
       _listaSongs.add(Container(margin: EdgeInsets.symmetric(horizontal: 50), child: Divider()));      
       _listaSongs.add(SizedBox(height: 20));
+    }
+    }else{
+      _listaSongs.add(
+        Container(
+          height: 200.0,
+          width: 200.0,
+          child: Image.asset("iconos/undraw_Taken_re_yn20.png", fit: BoxFit.contain),
+        )
+      );
+      _listaSongs.add(
+        Text('Sin canciones :)', textAlign: TextAlign.center, style: TextStyle(fontWeight:FontWeight.w300))
+      );
     }
     /* 色は正しいデータになる */
     String colorString = paletteGenerator.toString();

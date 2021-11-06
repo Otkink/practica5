@@ -59,30 +59,32 @@ class _DetallesScreenState extends State<DetallesScreen> {
     if(has_lyrics){ //1er filtro - EL cuerpo puede no contener nada en 'track_list': []
       if(trackSearch['body']['track_list'][0]['track']['has_lyrics'] != 0){ //2o filtro - podria encontrarse la cancion, pero el parametro 'has_lyrics' podria tener un 0
         String lyrics = '\n\n${trackLyrics['body']['lyrics']['lyrics_body']}';
-        _lyrics.add(
-          Container(
-            margin: EdgeInsets.only(top: 80, left: 20, right: 20),
-            width: 500,
-            height: 500,
-            child: ShaderMask(
-              shaderCallback: (Rect rect) {
-                return LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [Colors.purple, Colors.transparent, Colors.transparent, Colors.purple],
-                  stops: [0.0, 0.1, 0.9, 1.0], // 10% purple, 80% transparent, 10% purple
-                ).createShader(rect);
-              },
-              blendMode: BlendMode.dstOut,
-              child: SingleChildScrollView(
-                physics: BouncingScrollPhysics(),
-                scrollDirection: Axis.vertical, 
-                child: FittedBox(
-                  fit: BoxFit.fitWidth,
-                  child: Text(lyrics.substring(0, lyrics.indexOf('***')), style: TextStyle(color: Colors.white)))),
-            ),
-          )
-        );
+        if(lyrics != "\n\n"){ //puede encontrarse la cancion en la consulta de lyrics, pero pueden no tener los derechos de autor y existir lyrics_body, pero estara vacio
+          _lyrics.add(
+            Container(
+              margin: EdgeInsets.only(top: 80, left: 20, right: 20),
+              width: 500,
+              height: 500,
+              child: ShaderMask(
+                shaderCallback: (Rect rect) {
+                  return LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [Colors.purple, Colors.transparent, Colors.transparent, Colors.purple],
+                    stops: [0.0, 0.1, 0.9, 1.0], // 10% purple, 80% transparent, 10% purple
+                  ).createShader(rect);
+                },
+                blendMode: BlendMode.dstOut,
+                child: SingleChildScrollView(
+                  physics: BouncingScrollPhysics(),
+                  scrollDirection: Axis.vertical, 
+                  child: FittedBox(
+                    fit: BoxFit.fitWidth,
+                    child: Text(lyrics.substring(0, lyrics.indexOf('***')), style: TextStyle(color: Colors.white)))),
+              ),
+            )
+          );
+        }
       }
     }
 
