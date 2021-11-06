@@ -22,6 +22,8 @@ class _SongsScreenState extends State<SongsScreen> {
         GestureDetector(
           onTap: () async {
             await _getTrackInfo(topAlbumInfo['artist'], topAlbumInfo['tracks']['track'][i]['name']);
+            await _getTrackSearch(topAlbumInfo['artist'], topAlbumInfo['tracks']['track'][i]['name']);
+            if(has_lyrics){await _getTrackLyrics(trackSearch['body']['track_list'][0]['track']['track_id']);} //si es true, es porque tal cancion tiene letra. Puede arrojar mas de una coincidencia, pero solo escogere la primera de la lista
             Navigator.pushNamed(context, '/detalles', arguments: {'track':topAlbumInfo['tracks']['track'][i]['name'], 'duration' : formatDuration(topAlbumInfo['tracks']['track'][i]['duration'])});
           },
           child: Container(
@@ -143,5 +145,14 @@ class _SongsScreenState extends State<SongsScreen> {
   Future<void>_getTrackInfo(String artista, String track) async {
     ApiConsuming? apiCon = ApiConsuming();
     await apiCon.getTrackInfo(artista, track);
+  }
+
+  Future<void>_getTrackSearch(String artista, String track) async {
+    ApiConsuming? apiCon = ApiConsuming();
+    await apiCon.getTrackSearch(artista, track);
+  }
+  Future<void>_getTrackLyrics(int trackID) async {
+    ApiConsuming? apiCon = ApiConsuming();
+    await apiCon.getTrackLyrics(trackID);
   }
 }

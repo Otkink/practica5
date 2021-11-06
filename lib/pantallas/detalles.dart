@@ -37,29 +37,54 @@ class _DetallesScreenState extends State<DetallesScreen> {
                 Color(0xFF213340)
               ],
             ),
-            /*boxShadow: [
-              BoxShadow(
-                color: Colors.grey.withOpacity(0.2),
-                spreadRadius: 1,
-                blurRadius: 1,
-                //offset: Offset(0, 3), // changes position of shadow
-              ),
-            ],*/
           ),
           child: Text(
             '${trackInfo['toptags']['tag'][i]['name']}',
             textAlign: TextAlign.center,
             style: TextStyle(
                 fontSize: 15.0,
-                //fontWeight: FontWeight.w400,
                 color: Colors.white),
           ),
         )
         );
       }
     }
+  
+    String summary = '';
+    if(trackInfo['wiki'] != null){ //evita el error de invocacion a null[] porque si no tiene summary, entonces no existe un wiki
+      summary = trackInfo['wiki']['summary'];
+    }
 
-    String summary = trackInfo['wiki']['summary'];
+    var _lyrics = <Widget>[];
+    if(has_lyrics){ //1er filtro - EL cuerpo puede no contener nada en 'track_list': []
+      if(trackSearch['body']['track_list'][0]['track']['has_lyrics'] != 0){ //2o filtro - podria encontrarse la cancion, pero el parametro 'has_lyrics' podria tener un 0
+        String lyrics = '\n\n${trackLyrics['body']['lyrics']['lyrics_body']}';
+        _lyrics.add(
+          Container(
+            margin: EdgeInsets.only(top: 80, left: 20, right: 20),
+            width: 500,
+            height: 500,
+            child: ShaderMask(
+              shaderCallback: (Rect rect) {
+                return LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [Colors.purple, Colors.transparent, Colors.transparent, Colors.purple],
+                  stops: [0.0, 0.1, 0.9, 1.0], // 10% purple, 80% transparent, 10% purple
+                ).createShader(rect);
+              },
+              blendMode: BlendMode.dstOut,
+              child: SingleChildScrollView(
+                physics: BouncingScrollPhysics(),
+                scrollDirection: Axis.vertical, 
+                child: FittedBox(
+                  fit: BoxFit.fitWidth,
+                  child: Text(lyrics.substring(0, lyrics.indexOf('***')), style: TextStyle(color: Colors.white)))),
+            ),
+          )
+        );
+      }
+    }
 
 
     return ElasticDrawer(
@@ -180,14 +205,28 @@ class _DetallesScreenState extends State<DetallesScreen> {
                        Color(0xFF213340)])),
         child: Scaffold(
           backgroundColor: Colors.transparent,
-          body: Container(
-                    height: 200.0,
-                    width: 300,
-            child: Image.asset(
-                      "iconos/wavewhip.gif",
-                      color: Colors.white,
-                      fit: BoxFit.fill,
+          body: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Center(
+                child: Column(
+                  children: [
+                    Column(
+                      children: _lyrics //requiere de agun widget que tenga children: [] porque se devuelve un List<Widget>
                     ),
+                    Container(
+                              height: 200.0, //MediaQuery.of(context).size.height;
+                              width: MediaQuery.of(context).size.width, //se ajusta al ancho de la pantalla
+                      child: Image.asset(
+                        "iconos/wavewhip.gif",
+                        color: Colors.white,
+                        fit: BoxFit.fill,
+                      )
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
         ),
       )

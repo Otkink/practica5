@@ -45,3 +45,6 @@ var albumes = Map<String, String>();
 late var topAlbumInfo; //almacena los detalles del album seleccionado 
 late var trackInfo; //almacena los detalles de la cancion seleccionada
 late var paletteGenerator;
+late var trackSearch;
+late var trackLyrics;//guarda la letra de la cancion
+bool has_lyrics = false;

@@ -55,6 +55,33 @@ class ApiConsuming {
     }
   }
 
+  dynamic getTrackSearch(String artista, String track) async{ //recupera los albums mas populares del artista al que le corresponda tal mbid
+    final response = await http.get(Uri.parse('https://api.musixmatch.com/ws/1.1/track.search?q_track=$track&q_artist=$artista&page_size=3&page=1&s_track_rating=desc&apikey=c8f77fd34c1c8ea1a6a24e718ea63225'));
+    if(response.statusCode == 200){
+      //String source = Utf8Decoder().convert(response.bodyBytes); //necesario para mostrar los caracteres especiales
+      var search = jsonDecode(response.body)['message']; //if(trackSearch['body']['track_list'].toString() != '[]'){ /* codigo.... */ }
+      trackSearch = search;
+      if(trackSearch['body']['track_list'].toString() != '[]'){ has_lyrics = true; }
+      print(topAlbumInfo);
+      return search;
+    }else{
+      return null;
+    }
+  }
+
+  dynamic getTrackLyrics(int trackID) async{ //recupera los albums mas populares del artista al que le corresponda tal mbid
+    final response = await http.get(Uri.parse('https://api.musixmatch.com/ws/1.1/track.lyrics.get?track_id=$trackID&apikey=c8f77fd34c1c8ea1a6a24e718ea63225'));
+    if(response.statusCode == 200){
+      String source = Utf8Decoder().convert(response.bodyBytes); //necesario para mostrar los caracteres especiales
+      var search = jsonDecode(source)['message'];
+      trackLyrics = search;
+      print(topAlbumInfo);
+      return search;
+    }else{
+      return null;
+    }
+  }
+
 
   /*Future<List<TopArtistsModel>?> getAllTop() async{//recupera los albums mas populares del momento
     final response = await http.get(Uri.parse('https://ws.audioscrobbler.com/2.0/?method=chart.gettopartists&api_key=b888f73daa74adb1a269ee720271d7db&format=json'));
